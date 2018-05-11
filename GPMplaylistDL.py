@@ -147,7 +147,7 @@ if m3u:
 
 if winamp:
     for playlist in master:
-        fname - playlist.name + ".pls"
+        fname = playlist.name + ".pls"
         with open(fname, "w+") as f:
             f.write("[playlist]")
             for i, song in enumerate(playlist.songs):
