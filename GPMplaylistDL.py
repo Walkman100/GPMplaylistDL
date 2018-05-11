@@ -43,7 +43,7 @@ if rootPath == "":
 def dlSong(id, name):
     url = mc.get_stream_url(id, device_id=device_id)
     r = requests.get(url, stream=True)
-    with open("{}.mp3".format(name), "wb") as f:
+    with open("{}".format(name), "wb") as f:
         for chunk in r.iter_content(chunk_size=1024):
             if chunk:
                 f.write(chunk)
