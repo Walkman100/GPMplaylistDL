@@ -21,6 +21,7 @@ http://unofficial-google-music-api.readthedocs.io/en/latest/reference/mobileclie
 from gmusicapi import Mobileclient
 import requests
 import sys, os, unicodedata
+reload(sys)
 sys.setdefaultencoding('ISO-8859-1')
 
 # Account settings
