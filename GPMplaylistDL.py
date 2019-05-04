@@ -103,8 +103,20 @@ mc.__init__(debug_logging=False, validate=True, verify_ssl=True)
 mc.login(username, password, mc.FROM_MAC_ADDRESS)
 
 # Pick a device_id for downloading later
-device_id = mc.get_registered_devices()[0]['id'][2:].encode('ascii','ignore')
+for device in mc.get_registered_devices():
+    if device['type'] == 'ANDROID':
+        device_id = device['id'][2:] #.encode('ascii','ignore')
+        break
+    elif device['type'] == 'IOS':
+        device_id = device['id']
+        break
 
+if not device_id:
+    print "No Android or iOS device linked to account!"
+    exit
+
+mc = Mobileclient()
+mc.login(username, password, device_id)
 
 # Grab all playlists, and sort them into a structure
 playlists = mc.get_all_user_playlist_contents()
