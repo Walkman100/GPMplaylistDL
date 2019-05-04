@@ -28,11 +28,16 @@ sys.setdefaultencoding('ISO-8859-1')
 username = ""
 password = "" # App-specific passwords work here too
 
+# Output Settings
+showSongs = True # set to true to show each song path before it's downloaded
+quiet = False # set to true to completely silence
+
 # Playlist settings
 ## Export as...
 m3u = True
 winamp = False
 
+replaceChar = "_" # Character to replace invalid characters with. Can be empty ("")
 rootPath = "" # Playlists can require abs. paths. Default is current dir
 if rootPath == "":
     rootPath = os.path.realpath('.')
@@ -56,7 +61,7 @@ def clean(string):
     string = string.replace('<', '[')
     string = string.replace('>', ']')
     for i in badchars:
-        string = string.replace(i, "_")
+        string = string.replace(i, replaceChar)
     return string
 
 class Playlist(object):
@@ -112,7 +117,8 @@ mc.login(username, password, device_id)
 
 # Grab all playlists, and sort them into a structure
 playlists = mc.get_all_user_playlist_contents()
-print len(playlists), "found."
+if not quiet:
+    print len(playlists), "playlist(s) found."
 master = []
 for ply in playlists:
     name = ply['name']
@@ -132,10 +138,13 @@ for ply in playlists:
 
 # Step through the playlists and download songs
 for playlist in master:
-    print "Grabbing", playlist
+    if not quiet:
+        print "Grabbing", playlist
     for song in playlist.songs:
         path = playlist.songPath(song)
         if not os.path.isfile(path): # Skip existing songs
+            if showSongs and not quiet:
+                print "DL:", path
             dlSong(song.tid, path)
 
 # Deal with playlists
