@@ -68,8 +68,7 @@ class Playlist(object):
     def addSong(self, song):
         self.songs.append(song)
     def makePath(self, song):
-        path = os.path.join(rootPath, song.artist, song.album)
-        song.path = self.clean(path)
+        song.path = os.path.join(rootPath, self.clean(song.artist), self.clean(song.album))
         try:
             os.makedirs(song.path)
         except:
