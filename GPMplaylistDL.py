@@ -49,52 +49,45 @@ def dlSong(id, name):
             if chunk:
                 f.write(chunk)
 
+def clean(string):
+    badchars = ":\"/|?*" # "<>:\"/|?*"
+    string = unicode(string)
+    string = unicodedata.normalize('NFKD', string).encode('ascii','ignore')
+    string = string.replace('<', '[')
+    string = string.replace('>', ']')
+    for i in badchars:
+        string = string.replace(i, "_")
+    return string
 
 class Playlist(object):
     def __init__(self, name):
-        name = self.clean(name)
+        name = clean(name)
         self.name = name
         self.path = name
         self.songs = []
     def __repr__(self):
         return "{}: {} songs".format(self.name, len(self.songs))
-    def clean(self, string):
-        badchars = "<>:\"/|?*"
-        string = unicode(string)
-        string = unicodedata.normalize('NFKD', string).encode('ascii','ignore')
-        for i in badchars:
-            string = string.replace(i,"")
-        return string
     def addSong(self, song):
         self.songs.append(song)
     def makePath(self, song):
-        song.path = os.path.join(rootPath, self.clean(song.artist), self.clean(song.album))
+        song.path = os.path.join(rootPath, clean(song.artist), clean(song.album))
         try:
             os.makedirs(song.path)
         except:
             pass
     def songPath(self, song):
         self.makePath(song)
-        return os.path.join(song.path, song.title + ".mp3")
-
+        return os.path.join(song.path, clean(song.title) + ".mp3")
 
 class Song(object):
     def __init__(self, tid, title, artist, album, length):
-        self.tid = self.clean(tid)
-        self.title = self.clean(title)
-        self.artist = self.clean(artist)
-        self.album = self.clean(album)
+        self.tid = clean(tid)
+        self.title = clean(title)
+        self.artist = clean(artist)
+        self.album = clean(album)
         self.length = length
     def __repr__(self):
         return "{} - {}".format(self.artist, self.title)
-    def clean(self, string):
-        badchars = "<>:\"/|?*"
-        string = unicode(string)
-        string = unicodedata.normalize('NFKD', string).encode('ascii','ignore')
-        for i in badchars:
-            string = string.replace(i,"")
-        return string
-
 
 # Login
 mc = Mobileclient()
