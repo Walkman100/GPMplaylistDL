@@ -20,9 +20,7 @@ http://unofficial-google-music-api.readthedocs.io/en/latest/reference/mobileclie
 
 from gmusicapi import Mobileclient
 import requests
-import sys, os, unicodedata
-reload(sys)
-sys.setdefaultencoding('ISO-8859-1')
+import os, unicodedata
 
 # Account settings
 username = ""
@@ -37,7 +35,6 @@ quiet = False # set to true to completely silence
 m3u = True
 winamp = False
 
-replaceChar = "_" # Character to replace invalid characters with. Can be empty ("")
 rootPath = "" # Playlists can require abs. paths. Default is current dir
 if rootPath == "":
     rootPath = os.path.realpath('.')
@@ -55,13 +52,16 @@ def dlSong(id, name):
                 f.write(chunk)
 
 def clean(string):
-    badchars = ":\"/|?*" # "<>:\"/|?*"
-    string = unicode(string)
-    string = unicodedata.normalize('NFKD', string).encode('ascii','ignore')
-    string = string.replace('<', '[')
-    string = string.replace('>', ']')
-    for i in badchars:
-        string = string.replace(i, replaceChar)
+    # Replace chars with alternatives - "<>:\"/|?*" - thanks to https://stackoverflow.com/a/51548942/2999220
+    string = string.replace('<', '‹')
+    string = string.replace('>', '›')
+    string = string.replace(':', '：')
+    string = string.replace('"', '”')
+    string = string.replace('\\', '＼')
+    string = string.replace('/', '∕')
+    string = string.replace('|', '⏐')
+    string = string.replace('?', '︖')
+    string = string.replace('*', '⁎')
     return string
 
 class Playlist(object):
@@ -109,7 +109,7 @@ for device in mc.get_registered_devices():
         break
 
 if not device_id:
-    print "No Android or iOS device linked to account!"
+    print("No Android or iOS device linked to account!")
     exit
 
 mc = Mobileclient()
@@ -118,7 +118,7 @@ mc.login(username, password, device_id)
 # Grab all playlists, and sort them into a structure
 playlists = mc.get_all_user_playlist_contents()
 if not quiet:
-    print len(playlists), "playlist(s) found."
+    print(len(playlists), "playlist(s) found.")
 master = []
 for ply in playlists:
     name = ply['name']
@@ -139,12 +139,12 @@ for ply in playlists:
 # Step through the playlists and download songs
 for playlist in master:
     if not quiet:
-        print "Grabbing", playlist
+        print("Grabbing", playlist)
     for song in playlist.songs:
         path = playlist.songPath(song)
         if not os.path.isfile(path): # Skip existing songs
             if showSongs and not quiet:
-                print "DL:", path
+                print("DL:", path)
             dlSong(song.tid, path)
 
 # Deal with playlists
