@@ -100,6 +100,7 @@ mc.__init__(debug_logging=False, validate=True, verify_ssl=True)
 mc.login(username, password, mc.FROM_MAC_ADDRESS)
 
 # Pick a device_id for downloading later
+device_id = None
 for device in mc.get_registered_devices():
     if device['type'] == 'ANDROID':
         device_id = device['id'][2:] #.encode('ascii','ignore')
@@ -110,7 +111,7 @@ for device in mc.get_registered_devices():
 
 if not device_id:
     print("No Android or iOS device linked to account!")
-    exit
+    exit()
 
 mc = Mobileclient()
 mc.login(username, password, device_id)
