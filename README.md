@@ -25,6 +25,7 @@ http://unofficial-google-music-api.readthedocs.io/en/latest/reference/mobileclie
 
 ## Instructions
 Install python 2.7 and pip, -OR- install python 3 and pip 3 (`python3-pip` on Debian)
+
 Once you have these installed, you'll need some python packages. You can install these from the command line with:
 
 ```sh
