@@ -7,7 +7,7 @@ This is a little script to download every song from every playlist
 in your Google Play Music account. Songs are organized as follows:
 
 ```sh
-<artist>/<album>/<song>.mp3
+<artist>/<album>/<song number> <song name>.mp3
 ```
 
 I Highly recomend putting this file in your %USER%\Music folder

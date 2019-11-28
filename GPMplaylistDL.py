@@ -82,12 +82,13 @@ class Playlist(object):
             pass
     def songPath(self, song):
         self.makePath(song)
-        return os.path.join(song.path, clean(song.title) + ".mp3")
+        return os.path.join(song.path, str(song.number) + " " + clean(song.title) + ".mp3")
 
 class Song(object):
-    def __init__(self, tid, title, artist, album, length):
-        self.tid = clean(tid)
+    def __init__(self, tid, title, number, artist, album, length):
+        self.tid = tid
         self.title = clean(title)
+        self.number = number
         self.artist = clean(artist)
         self.album = clean(album)
         self.length = length
@@ -129,10 +130,11 @@ for ply in playlists:
         if song['source'] == u"2": # If song is not custom upload
             tid = song['trackId']
             title = song['track']['title']
+            number = song['track']['trackNumber']
             artist = song['track']['artist']
             album = song['track']['album']
             length = int(song['track']['durationMillis']) / 1000
-            newSong = Song(tid, title, artist, album, length)
+            newSong = Song(tid, title, number, artist, album, length)
             curPlaylist.addSong(newSong)
     master.append(curPlaylist)
 

@@ -86,7 +86,7 @@ class Playlist(object):
 
 class Song(object):
     def __init__(self, tid, title, number, artist, album, length):
-        self.tid = clean(tid)
+        self.tid = tid
         self.title = clean(title)
         self.number = number
         self.artist = clean(artist)
